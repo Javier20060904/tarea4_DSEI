@@ -15,6 +15,6 @@ elseif(${IDF_TARGET} STREQUAL "esp32c3")
     add_compile_definitions(ESP32C3)
 endif()
 
-add_compile_definitions(RTOS=1)
+add_compile_definitions(RTOS=0)
 
 project(DSE_Tarea2_Equipo1)

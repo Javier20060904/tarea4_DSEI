@@ -2,3 +2,5 @@
 .devcontainer/
 build/
 *.old
+.cache/
+sdkconfig

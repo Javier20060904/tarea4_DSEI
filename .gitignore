@@ -3,4 +3,4 @@ build/
 *.old
 .cache/
 sdkconfig
-.vscode/settings.json
+settings.json

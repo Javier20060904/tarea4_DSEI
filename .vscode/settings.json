@@ -1,0 +1,41 @@
+{
+    "C_Cpp.intelliSenseEngine": "default",
+    "idf.adapterTargetName": "esp32",
+    "idf.customExtraPaths": "/home/jamep/.espressif/tools/xtensa-esp-elf-gdb/12.1_20221002/xtensa-esp-elf-gdb/bin:/home/jamep/.espressif/tools/riscv32-esp-elf-gdb/12.1_20221002/riscv32-esp-elf-gdb/bin:/home/jamep/.espressif/tools/xtensa-esp32-elf/esp-12.2.0_20230208/xtensa-esp32-elf/bin:/home/jamep/.espressif/tools/xtensa-esp32s2-elf/esp-12.2.0_20230208/xtensa-esp32s2-elf/bin:/home/jamep/.espressif/tools/xtensa-esp32s3-elf/esp-12.2.0_20230208/xtensa-esp32s3-elf/bin:/home/jamep/.espressif/tools/riscv32-esp-elf/esp-12.2.0_20230208/riscv32-esp-elf/bin:/home/jamep/.espressif/tools/esp32ulp-elf/2.35_20220830/esp32ulp-elf/bin:/home/jamep/.espressif/tools/openocd-esp32/v0.12.0-esp32-20230921/openocd-esp32/bin:/home/jamep/.espressif/tools/esp-rom-elfs/20230320",
+    "idf.customExtraVars": {
+        "OPENOCD_SCRIPTS": "/home/jamep/.espressif/tools/openocd-esp32/v0.12.0-esp32-20230921/openocd-esp32/share/openocd/scripts",
+        "ESP_ROM_ELF_DIR": "/home/jamep/.espressif/tools/esp-rom-elfs/20230320/"
+    },
+    "idf.espIdfPath": "/home/jamep/esp/esp-idf",
+    "idf.openOcdConfigs": [
+        "board/esp32-wrover-kit-3.3v.cfg"
+    ],
+    "idf.port": "/dev/ttyUSB0",
+    "idf.pythonBinPath": "/home/jamep/.espressif/python_env/idf5.1_py3.11_env/bin/python",
+    "idf.toolsPath": "/home/jamep/.espressif",
+    "idf.flashType": "UART",
+    "files.associations": {
+        "sdkconfig.h": "c",
+        "bsp.h": "c",
+        "adc.h": "c",
+        "freertos.h": "c",
+        "task.h": "c",
+        "esp_log.h": "c",
+        "*.tcc": "c",
+        "aplication.h": "c",
+        "ratio": "c",
+        "system_error": "c",
+        "array": "c",
+        "functional": "c",
+        "regex": "c",
+        "tuple": "c",
+        "type_traits": "c",
+        "utility": "c",
+        "adc_continuous.h": "c",
+        "BSP.H": "cpp",
+        "hal.h": "c",
+        "random": "c",
+        "adc_oneshot.h": "c",
+        "esp_timer.h": "c"
+    }
+}

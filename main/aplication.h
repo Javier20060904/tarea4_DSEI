@@ -9,8 +9,6 @@
     extern TaskHandle_t buttonHandle;
 #endif
 
-#define VOLTAGE_READ(adc) (ADC_Read(adc) * 5 / 4095)
-
 void systemInit();
 void periphInit(void);
 

@@ -1,6 +1,7 @@
 #include "HAL.h"
 
-adc_oneshot_unit_handle_t adc_handle;
+adc_oneshot_unit_handle_t adc_handle = NULL;
+adc_cali_handle_t cali_handle = NULL;
 
 void GPIO_Set_Interrupt(gpio_num_t puerto, gpio_isr_t function){
     GPIO_Set(puerto, GPIO_MODE_INPUT);
@@ -11,7 +12,8 @@ void GPIO_Set_Interrupt(gpio_num_t puerto, gpio_isr_t function){
     gpio_intr_enable(puerto);
 }
 
-void ADC_Init(adc_channel_t channel){
+
+void ADC_Init(){
     adc_oneshot_unit_init_cfg_t init_config = {
         .unit_id = ADC_UNIT_1,
         .ulp_mode = ADC_ULP_MODE_DISABLE,
@@ -22,13 +24,32 @@ void ADC_Init(adc_channel_t channel){
         .bitwidth = ADC_BITWIDTH_DEFAULT,
         .atten = ADC_ATTEN_DB_11,
     };
+    adc_oneshot_config_channel(adc_handle, ADC_CHANNEL_6, &config);
+    adc_oneshot_config_channel(adc_handle, ADC_CHANNEL_5, &config);
+    adc_oneshot_config_channel(adc_handle, ADC_CHANNEL_4, &config);
+
+
+    adc_cali_line_fitting_config_t cali_config = {
+        .unit_id = ADC_UNIT_1,
+        .atten = ADC_ATTEN_DB_11,
+        .bitwidth = ADC_BITWIDTH_DEFAULT,
+    };
+    ESP_ERROR_CHECK(adc_cali_create_scheme_line_fitting(&cali_config, &cali_handle));
+}
+
+void ADC_Channel_Init(adc_channel_t channel){
+    adc_oneshot_chan_cfg_t config = {
+        .bitwidth = ADC_BITWIDTH_DEFAULT,
+        .atten = ADC_ATTEN_DB_11,
+    };
     adc_oneshot_config_channel(adc_handle, channel, &config);
 }
 
-int ADC_Read(adc_channel_t channel){
-    int adc_reading;
-    adc_oneshot_read(adc_handle, channel, &adc_reading);
-    return adc_reading;
+void ADC_Read(adc_channel_t channel, int *adc_reading){
+    int raw_reading;
+    adc_oneshot_read(adc_handle, channel, &raw_reading);
+    adc_cali_raw_to_voltage(cali_handle, raw_reading, adc_reading);
+
 }
 
 void UART_Init(void) {

@@ -28,7 +28,7 @@ int32_t startMilis;
 
 void periphInit(void){
     ADC_Init(ADC_CHANNEL);
-    GPIO_Set(LED_PIN, GPIO_MODE_INPUT_OUTPUT_OD);
+    GPIO_Set(LED_PIN, GPIO_MODE_OUTPUT);
     UART_Init();
     #if RTOS
         GPIO_Set(BUTTON_PIN, GPIO_MODE_INPUT);
@@ -82,7 +82,7 @@ void systemInit(void){
                 sprintf(message, "LECTURA DEL ADC: %d V\n", VOLTAGE_READ(ADC_CHANNEL));
                 UART_Write(message);
             }
-            vTaskDelay(1000 / portTICK_PERIOD_MS);
+            vTaskDelay(750 / portTICK_PERIOD_MS);
         }
     }
 
@@ -90,12 +90,11 @@ void systemInit(void){
         while (1)
         {        
             GPIO_Write(LED_PIN, systemState);
-
             //ESP_LOGI(TAG, "ESTADO DEL SISTEMA: %s", systemState ? "ENCENDIDO" : "APAGADO");
             sprintf(message, "ESTADO DEL SISTEMA: %s\n", systemState ? "ENCENDIDO" : "APAGADO");
             UART_Write(message);
             
-            vTaskDelay(1000 / portTICK_PERIOD_MS);
+            vTaskDelay(750 / portTICK_PERIOD_MS);
         }    
     }
 

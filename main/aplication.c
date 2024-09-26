@@ -27,13 +27,33 @@ int32_t startMilis;
 #endif
 
 void periphInit(void){
-    ADC_Init(ADC_CHANNEL);
+    ADC_Init(ADC_CHANNEL_6);
+    rtc_gpio_init(GPIO_NUM_34);
+    rtc_gpio_set_direction(GPIO_NUM_34, RTC_GPIO_MODE_INPUT_ONLY);
+    rtc_gpio_set_drive_capability(GPIO_NUM_34, GPIO_DRIVE_CAP_0);
+    rtc_gpio_pulldown_dis(GPIO_NUM_34);
+    rtc_gpio_pullup_dis(GPIO_NUM_34);
+    
+    ADC_Init(ADC_CHANNEL_5);
+    rtc_gpio_init(GPIO_NUM_33);
+    rtc_gpio_set_direction(GPIO_NUM_33, RTC_GPIO_MODE_INPUT_ONLY);
+    rtc_gpio_set_drive_capability(GPIO_NUM_33, GPIO_DRIVE_CAP_0);
+    rtc_gpio_pulldown_dis(GPIO_NUM_33);
+    rtc_gpio_pullup_dis(GPIO_NUM_33);
+    
+    ADC_Init(ADC_CHANNEL_4);
+    rtc_gpio_init(GPIO_NUM_32);
+    rtc_gpio_set_direction(GPIO_NUM_32, RTC_GPIO_MODE_INPUT_ONLY);
+    rtc_gpio_set_drive_capability(GPIO_NUM_32, GPIO_DRIVE_CAP_0);
+    rtc_gpio_pulldown_dis(GPIO_NUM_32);
+    rtc_gpio_pullup_dis(GPIO_NUM_32);
+    
     GPIO_Set(LED_PIN, GPIO_MODE_OUTPUT);
     UART_Init();
     #if RTOS
         GPIO_Set(BUTTON_PIN, GPIO_MODE_INPUT);
         GPIO_PullMode(BUTTON_PIN, GPIO_PULLUP_ONLY);
-    #elif !RTOS
+    #elif !RTOS     
         GPIO_Set_Interrupt(BUTTON_PIN, systemInterrupt);
     #endif
 }
@@ -73,13 +93,14 @@ void systemInit(void){
 #elif RTOS
     void vADC(void *arg){
         while(1){
+            ESP_LOGI(TAG, "PIN ADC: %lu", rtc_gpio_get_level(GPIO_NUM_34));
             if(!systemState){
                 //ESP_LOGI(TAG, "NO DISPONIBLE");
                 UART_Write("NO DISPONIBLE\n");
             }
             else{
-                //ESP_LOGI(TAG, "LECTURA DEL ADC: %d V", VOLTAGE_READ(ADC_CHANNEL));
-                sprintf(message, "LECTURA DEL ADC: %d V\n", VOLTAGE_READ(ADC_CHANNEL));
+                //
+                sprintf(message, "LECTURA DEL ADC: %d V\n", VOLTAGE_READ(ADC_CHANNEL_6));
                 UART_Write(message);
             }
             vTaskDelay(750 / portTICK_PERIOD_MS);

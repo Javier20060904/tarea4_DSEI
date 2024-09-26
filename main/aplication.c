@@ -1,5 +1,6 @@
 #include "aplication.h"
 #include "BSP.h"
+#include "HAL.h"
 
 #if RTOS
     TaskHandle_t adcHandle = NULL;
@@ -11,6 +12,7 @@
 
 
 static const char *TAG = "example";
+static char message[50];
 
 bool systemState = true;
 
@@ -27,6 +29,7 @@ int32_t startMilis;
 void periphInit(void){
     ADC_Init(ADC_CHANNEL);
     GPIO_Set(LED_PIN, GPIO_MODE_INPUT_OUTPUT_OD);
+    UART_Init();
     #if RTOS
         GPIO_Set(BUTTON_PIN, GPIO_MODE_INPUT);
         GPIO_PullMode(BUTTON_PIN, GPIO_PULLUP_ONLY);
@@ -43,18 +46,24 @@ void systemInit(void){
             vTaskResume(adcHandle);
     #elif !RTOS
     #endif
-    ESP_LOGI(TAG, "INICIA SISTEMA");
+    //ESP_LOGI(TAG, "INICIA SISTEMA");
+    UART_Write("INICIA SISTEMA\n");
 }
 
 #if !RTOS
     void systemBehavior(void){
         int32_t currentMillis = (int32_t) esp_timer_get_time()/1000;
         if(currentMillis - startMilis >= 1000){
-            ESP_LOGI(TAG, "ESTADO DEL SISTEMA: %s", systemState ? "ENCENDIDO" : "APAGADO");
+            //ESP_LOGI(TAG, "ESTADO DEL SISTEMA: %s", systemState ? "ENCENDIDO" : "APAGADO");
+            sprintf(message, "ESTADO DEL SISTEMA: %s\n", systemState ? "ENCENDIDO" : "APAGADO");
             if(!systemState)
-                ESP_LOGI(TAG, "NO DISPONIBLE");
-            else
-                ESP_LOGI(TAG, "LECTURA DEL ADC: %d V", VOLTAGE_READ(ADC_CHANNEL));
+                //ESP_LOGI(TAG, "NO DISPONIBLE");
+                UART_Write("NO DISPONIBLE\n");
+            else{
+                //ESP_LOGI(TAG, "LECTURA DEL ADC: %d V", VOLTAGE_READ(ADC_CHANNEL));
+                sprintf(message, "LECTURA DEL ADC: %d V\n", VOLTAGE_READ(ADC_CHANNEL));
+                UART_Write(message);
+            }
             startMilis = currentMillis;
         }
         GPIO_Write(LED_PIN, systemState ? LED_ON : LED_OFF);
@@ -65,10 +74,13 @@ void systemInit(void){
     void vADC(void *arg){
         while(1){
             if(!systemState){
-                ESP_LOGI(TAG, "NO DISPONIBLE");
+                //ESP_LOGI(TAG, "NO DISPONIBLE");
+                UART_Write("NO DISPONIBLE\n");
             }
             else{
-                ESP_LOGI(TAG, "LECTURA DEL ADC: %d V", VOLTAGE_READ(ADC_CHANNEL));
+                //ESP_LOGI(TAG, "LECTURA DEL ADC: %d V", VOLTAGE_READ(ADC_CHANNEL));
+                sprintf(message, "LECTURA DEL ADC: %d V\n", VOLTAGE_READ(ADC_CHANNEL));
+                UART_Write(message);
             }
             vTaskDelay(1000 / portTICK_PERIOD_MS);
         }
@@ -79,7 +91,9 @@ void systemInit(void){
         {        
             GPIO_Write(LED_PIN, systemState);
 
-            ESP_LOGI(TAG, "ESTADO DEL SISTEMA: %s", systemState ? "ENCENDIDO" : "APAGADO");
+            //ESP_LOGI(TAG, "ESTADO DEL SISTEMA: %s", systemState ? "ENCENDIDO" : "APAGADO");
+            sprintf(message, "ESTADO DEL SISTEMA: %s\n", systemState ? "ENCENDIDO" : "APAGADO");
+            UART_Write(message);
             
             vTaskDelay(1000 / portTICK_PERIOD_MS);
         }    
@@ -90,7 +104,8 @@ void systemInit(void){
         {
             int B = GPIO_Read(BUTTON_PIN);
             if (B != buttonState) {
-                ESP_LOGI(TAG, "Boton");
+                //ESP_LOGI(TAG, "Boton");
+                UART_Write("Boton\n");
                 if(B == LOW){
                     vTaskDelay(50 / portTICK_PERIOD_MS);
                     if(buttonPressed == 0)

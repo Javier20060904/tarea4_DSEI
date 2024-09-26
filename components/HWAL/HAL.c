@@ -30,3 +30,22 @@ int ADC_Read(adc_channel_t channel){
     adc_oneshot_read(adc_handle, channel, &adc_reading);
     return adc_reading;
 }
+
+void UART_Init(void) {
+    const uart_config_t uart_config = {
+        .baud_rate = 115200,                    // BaudRate: 115200
+        .data_bits = UART_DATA_8_BITS,          // Resolución: 8 bits
+        .parity    = UART_PARITY_DISABLE,       // Sin paridad
+        .stop_bits = UART_STOP_BITS_1,          // Un bit de paro
+        .flow_ctrl = UART_HW_FLOWCTRL_DISABLE   // Control de flujo desactivado
+    };
+    
+    // UART Principal
+    uart_param_config(UART_PORT, &uart_config);    // Configurado en el UART0, pines predeterminados
+    uart_set_pin(UART_PORT, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
+    uart_driver_install(UART_PORT, 1024*2, 0, 0, NULL, 0);
+}
+
+void UART_Write(const char* data) {
+    uart_write_bytes(UART_PORT, data, strlen(data));
+}

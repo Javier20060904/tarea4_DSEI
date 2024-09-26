@@ -1,6 +1,8 @@
 #include "aplication.h"
 #include "BSP.h"
 #include "HAL.h"
+#include "driver/gpio.h"
+#include "hal/gpio_types.h"
 
 #if RTOS
     TaskHandle_t adcHandle = NULL;
@@ -28,7 +30,9 @@ int32_t startMilis;
 
 void periphInit(void){
     ADC_Init(ADC_CHANNEL);
-    GPIO_Set(LED_PIN, GPIO_MODE_INPUT_OUTPUT_OD);
+    GPIO_Set(LED_PIN, GPIO_MODE_OUTPUT_OD);
+    GPIO_Set(GPIO_NUM_12, GPIO_MODE_INPUT);
+    GPIO_PullMode(GPIO_NUM_12, GPIO_FLOATING);
     UART_Init();
     #if RTOS
         GPIO_Set(BUTTON_PIN, GPIO_MODE_INPUT);
@@ -73,7 +77,7 @@ void systemInit(void){
 #elif RTOS
     void vADC(void *arg){
         while(1){
-            if(!systemState){
+            if(!systemState || !GPIO_Read(GPIO_NUM_12)){
                 //ESP_LOGI(TAG, "NO DISPONIBLE");
                 UART_Write("NO DISPONIBLE\n");
             }
@@ -81,7 +85,9 @@ void systemInit(void){
                 //ESP_LOGI(TAG, "LECTURA DEL ADC: %d V", VOLTAGE_READ(ADC_CHANNEL));
                 sprintf(message, "LECTURA DEL ADC: %d V\n", VOLTAGE_READ(ADC_CHANNEL));
                 UART_Write(message);
-            }
+            }    
+            sprintf(message, "PIN DEL ADC: %d\n", GPIO_Read(GPIO_NUM_12));
+            UART_Write(message);
             vTaskDelay(1000 / portTICK_PERIOD_MS);
         }
     }

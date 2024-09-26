@@ -104,22 +104,19 @@ void systemInit(void){
         {
             int B = GPIO_Read(BUTTON_PIN);
             if (B != buttonState) {
-                //ESP_LOGI(TAG, "Boton");
-                UART_Write("Boton\n");
                 if(B == LOW){
-                    vTaskDelay(50 / portTICK_PERIOD_MS);
                     if(buttonPressed == 0)
                         startMilis = (int32_t) esp_timer_get_time()/1000;
                     buttonPressed = buttonPressed * !(buttonPressed == 2);
-                    buttonPressed++;
+                    buttonPressed++;  
                 }
                 buttonState = B;
             }
-        
+
             int32_t currentMillis = (int32_t) esp_timer_get_time()/1000;;
 
-            if(currentMillis - startMilis >= 5000 && buttonPressed != 0){
-                systemState = systemState && (buttonPressed == 1);
+            if(currentMillis - startMilis >= 1000 && buttonPressed != 0){
+                systemState = (buttonPressed == 1);
                 buttonPressed = 0;
             }
 

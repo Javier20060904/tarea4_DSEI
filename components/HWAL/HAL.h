@@ -13,7 +13,7 @@
 // Declaraciones de funciones
 
 // ADC (Conversor Analógico-Digital)
-void ADC_Init(adc_channel_t channel);                    // Inicializar ADC
+void ADC_Init(adc_channel_t channel);    // Inicializar ADC
 int ADC_Read(adc_channel_t channel);    // Leer valor ADC
 
 // GPIO

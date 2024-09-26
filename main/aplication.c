@@ -36,7 +36,7 @@ void periphInit(void){
 }
 
 void systemInit(void){
-    systemState = false;
+    systemState = true;
     GPIO_Write(LED_PIN, systemState);
     #if RTOS
         if(adcHandle != NULL)
@@ -81,16 +81,16 @@ void systemInit(void){
 
             ESP_LOGI(TAG, "ESTADO DEL SISTEMA: %s", systemState ? "ENCENDIDO" : "APAGADO");
             
-            vTaskDelay(1 / portTICK_PERIOD_MS);
+            vTaskDelay(1000 / portTICK_PERIOD_MS);
         }    
     }
 
     void vButton(void *arg){
         while ((1))
         {
-
             int B = GPIO_Read(BUTTON_PIN);
             if (B != buttonState) {
+                ESP_LOGI(TAG, "Boton");
                 if(B == LOW){
                     vTaskDelay(50 / portTICK_PERIOD_MS);
                     if(buttonPressed == 0)
@@ -103,11 +103,12 @@ void systemInit(void){
         
             int32_t currentMillis = (int32_t) esp_timer_get_time()/1000;;
 
-            if(currentMillis - startMilis >= 5000){
-                systemState = (buttonPressed == 1);
+            if(currentMillis - startMilis >= 5000 && buttonPressed != 0){
+                systemState = systemState && (buttonPressed == 1);
+                buttonPressed = 0;
             }
 
-            vTaskDelay(1 / portTICK_PERIOD_MS);
+            vTaskDelay(10 / portTICK_PERIOD_MS);
         }
     }
 #endif

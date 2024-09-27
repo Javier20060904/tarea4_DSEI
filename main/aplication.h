@@ -9,7 +9,13 @@
     extern TaskHandle_t buttonHandle;
 #endif
 
-#define VOLTAGE_READ(adc) (ADC_Read(adc) * 5 / 4095)
+typedef struct {
+    TaskHandle_t taskHandle;
+    bool adcStatus;
+    int channel;
+    int adcRawRead;
+    int sensorNum;
+} Sensors;
 
 void systemInit();
 void periphInit(void);
@@ -19,6 +25,7 @@ void periphInit(void);
 #elif RTOS
     void vADC(void *arg);
     void vSystem(void *arg);
+    void vSensorMonitor(void *arg);
     void vButton(void *arg);
 #endif
 

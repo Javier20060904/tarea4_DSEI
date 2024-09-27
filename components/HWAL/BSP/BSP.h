@@ -7,9 +7,12 @@
 #include <string.h>
 #include "esp_log.h"
 #include "driver/gpio.h"
+#include "driver/rtc_io.h"
 #include "driver/uart.h"
 #include "esp_adc/adc_oneshot.h"
 #include "esp_timer.h"
+#include "esp_adc/adc_cali.h"
+#include "esp_adc/adc_cali_scheme.h"
 
 //Definiciones generales
 #define TRUE    1
@@ -21,7 +24,6 @@
 #ifdef ESP32
     #define LED_PIN     GPIO_NUM_2
     #define BUTTON_PIN  GPIO_NUM_19
-    #define ADC_CHANNEL ADC_CHANNEL_6
     #define UART_PORT   UART_NUM_0
     #define LED_ON 1
     #define LED_OFF 0
